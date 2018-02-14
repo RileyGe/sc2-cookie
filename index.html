@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+  <title>Demo</title>
+  <base href="/" />
+  <meta charset="UTF-8">
+  <meta id="viewport" name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script src="sc2/angular.min.js"></script>
+  <script src="sc2/angular-cookie.min.js"></script>
+  <script src="sc2/sc2.min.js"></script>
+  <script src="sc2/steem.min.js"></script>
+  <script src="sc2/app.js"></script>
+</head>
+
+<body>
+
+<div class="container py-5" style="max-width: 600px;" ng-controller="Main as main">
+  <div>
+    <h3>登录 & 退出</h3>
+    <b ng-show="isAuth()"><img src="//img.busy.org/@{{user.name}}?s=32" width="32" height="32"> @{{user.name}}</b>
+    <button ng-show="isAuth()" class="ml-2 btn btn-secondary" type="submit" ng-click="logout()">
+      退出
+    </button>
+    <a class="btn btn-primary" ng-href="{{loginURL}}" ng-hide="isAuth()">登录</a>
+  </div>
+
+  <hr />
+  <h3>评论 & 点赞</h3>
+  <div class="input-group input-group-lg">
+    @{{parentAuthor}}/{{parentPermlink}} 此帖子的评论: 
+  </div>
+
+  <ul class="list-group my-4" ng-init="loadComments()">
+    <li class="list-group-item" ng-repeat="comment in comments">
+      @{{comment.author}}: {{comment.body}}
+      <button ng-show="isAuth()" class="ml-2 btn btn-secondary btn-sm" type="submit" ng-click="vote(comment.author, comment.permlink, 1000)">
+        <i class="icon iconfont icon-praise"></i> {{comment.net_votes}}
+      </button>
+    </li>
+  </ul>
+
+  <form ng-show="isAuth()" ng-submit="comment()">
+    <div class="input-group">
+      <input type="text" class="form-control" ng-disabled="loading" placeholder="Write a comment here" ng-model="message">
+      <span class="input-group-btn">
+        <button class="btn btn-primary" type="submit">Submit</button>
+      </span>
+    </div>
+  </form>
+
+  <hr />
+  <h3>用户信息</h3>
+  <p>SteemConnect 允许开发者存储每一个用户的相关信息，例如用户偏好，但不会影响核心功能的使用。</p>
+  <form ng-show="isAuth()" ng-submit="updateUserMetadata({ locale: locale })">
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="What is your locale?" ng-model="locale">
+      <span class="input-group-btn">
+        <button class="btn btn-primary" type="submit">Save</button>
+      </span>
+    </div>
+    <pre class="mt-4">{{metadata}}</pre>
+  </form>
+
+</div>
+
+</body>
+</html>
