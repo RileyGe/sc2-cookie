@@ -1,11 +1,8 @@
-if(sc2.accessToken == null || sc2.accessToken == '')
-{
-  sc2.init({
-    app: 'steemthink.com',
-    callbackURL: 'https://rileyge.github.io/sc2test/callback.html',
-    scope: ['vote', 'comment']
-  });
-}
+sc2.init({
+  app: 'steemthink.com',
+  callbackURL: 'https://rileyge.github.io/sc2test/callback.html',
+  scope: ['vote', 'comment']
+});
 angular.module('app', ['ipCookie'])
   .controller('Main', function($scope, ipCookie) {
     $scope.loading = false;
