@@ -77,6 +77,8 @@ angular.module('app', ['ipCookie'])
     };
 
     $scope.logout = function() {
+      //delete the cookie when logout
+      ipCookie.remove('st_access_token', {path:'/'});
       sc2.revokeToken(function (err, result) {
         console.log('You successfully logged out', err, result);
         delete $scope.user;
@@ -95,7 +97,9 @@ angular.module('app', ['ipCookie'])
       //get the details of an account
       //set the cookie
       ipCookie('st_access_token', $scope.accessToken, 
-            {expirationUnit: 'seconds', expires: $scope.expiresIn * 1});
+            {expirationUnit: 'seconds', 
+            expires: $scope.expiresIn * 1,
+            path: '/'});
       sc2.me(function (err, result) {
         console.log('/me', err, result);
         if (!err) {
