@@ -1,12 +1,16 @@
-if(sc2.accessToken == null || sc2.accessToken == '')
-{
-  sc2.init({
-    app: 'steemthink.com',
-    callbackURL: 'https://rileyge.github.io/sc2test/callback.html',
-    scope: ['vote', 'comment']
-  });
-}
+sc2.init({
+  app: 'steemthink.com',
+  callbackURL: 'https://rileyge.github.io/sc2test/callback.html',
+  scope: ['vote', 'comment']
+});
 angular.module('app', ['ipCookie'])
+  .config(['$locationProvider', function ($locationProvider) {
+        $locationProvider.html5Mode({
+            enabled: true,
+            requireBase: true,
+            rewriteLinks: false
+        });
+    }])
   .controller('Main', function($scope, ipCookie) {
     $scope.loading = false;
     $scope.parentAuthor = 'skenan';
@@ -80,6 +84,8 @@ angular.module('app', ['ipCookie'])
     };
 
     $scope.logout = function() {
+      //delete the cookie when logout
+      ipCookie.remove('st_access_token', {path:'/'});
       sc2.revokeToken(function (err, result) {
         console.log('You successfully logged out', err, result);
         delete $scope.user;
@@ -98,7 +104,9 @@ angular.module('app', ['ipCookie'])
       //get the details of an account
       //set the cookie
       ipCookie('st_access_token', $scope.accessToken, 
-            {expirationUnit: 'seconds', expires: $scope.expiresIn * 1});
+            {expirationUnit: 'seconds', 
+            expires: $scope.expiresIn * 1,
+            path: '/'});
       sc2.me(function (err, result) {
         console.log('/me', err, result);
         if (!err) {
